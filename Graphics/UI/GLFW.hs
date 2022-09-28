@@ -789,6 +789,8 @@ windowHint (WindowHint'CenterCursor           x) =
   c'glfwWindowHint c'GLFW_CENTER_CURSOR            (toC x)
 windowHint (WindowHint'FocusOnShow            x) =
   c'glfwWindowHint c'GLFW_FOCUS_ON_SHOW            (toC x)
+windowHint (WindowHint'MousePassthrough       x) =
+  c'glfwWindowHint c'GLFW_MOUSE_PASSTHROUGH        (toC x)
 windowHint (WindowHint'ScaleToMonitor         x) =
   c'glfwWindowHint c'GLFW_SCALE_TO_MONITOR         (toC x)
 windowHint (WindowHint'CocoaRetinaFramebuffer x) =

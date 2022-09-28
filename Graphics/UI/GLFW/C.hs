@@ -1,4 +1,6 @@
-{-# LANGUAGE FlexibleInstances, MultiParamTypeClasses, FlexibleContexts #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 
 --------------------------------------------------------------------------------
 
@@ -10,25 +12,25 @@ module Graphics.UI.GLFW.C where
 
 --------------------------------------------------------------------------------
 
-import Data.Bits       ((.&.))
-import Data.Char       (chr, ord)
-import Foreign.C.Types (CDouble, CFloat, CInt, CUChar, CUInt, CUShort)
-import Foreign.Ptr     (Ptr)
-
 import Bindings.GLFW
+import Data.Bits ((.&.))
+import Data.Char (chr, ord)
+import Foreign.C.Types (CDouble, CFloat, CInt, CUChar, CUInt, CUShort)
+import Foreign.Ptr (Ptr)
 import Graphics.UI.GLFW.Types
 
 --------------------------------------------------------------------------------
 
 class C c h where
   fromC :: c -> h
-  toC   :: h -> c
+  toC :: h -> c
 
 --------------------------------------------------------------------------------
 
 instance (C CInt b) => C CInt (Maybe b) where
-  fromC i | i == c'GLFW_DONT_CARE = Nothing
-          | otherwise = Just $ fromC i
+  fromC i
+    | i == c'GLFW_DONT_CARE = Nothing
+    | otherwise = Just $ fromC i
   toC = maybe c'GLFW_DONT_CARE toC
 
 --------------------------------------------------------------------------------
@@ -70,42 +72,44 @@ instance C (Ptr C'GLFWwindow) Window where
   toC = unWindow
 
 instance C CInt ModifierKeys where
-  fromC v = ModifierKeys
-    { modifierKeysShift    = (v .&. c'GLFW_MOD_SHIFT)     /= 0
-    , modifierKeysControl  = (v .&. c'GLFW_MOD_CONTROL)   /= 0
-    , modifierKeysAlt      = (v .&. c'GLFW_MOD_ALT)       /= 0
-    , modifierKeysSuper    = (v .&. c'GLFW_MOD_SUPER)     /= 0
-    , modifierKeysCapsLock = (v .&. c'GLFW_MOD_CAPS_LOCK) /= 0
-    , modifierKeysNumLock  = (v .&. c'GLFW_MOD_NUM_LOCK)  /= 0
-    }
+  fromC v =
+    ModifierKeys
+      { modifierKeysShift = (v .&. c'GLFW_MOD_SHIFT) /= 0,
+        modifierKeysControl = (v .&. c'GLFW_MOD_CONTROL) /= 0,
+        modifierKeysAlt = (v .&. c'GLFW_MOD_ALT) /= 0,
+        modifierKeysSuper = (v .&. c'GLFW_MOD_SUPER) /= 0,
+        modifierKeysCapsLock = (v .&. c'GLFW_MOD_CAPS_LOCK) /= 0,
+        modifierKeysNumLock = (v .&. c'GLFW_MOD_NUM_LOCK) /= 0
+      }
   toC = undefined
 
 instance C C'GLFWvidmode VideoMode where
-  fromC gvm = VideoMode
-    { videoModeWidth       = fromIntegral $ c'GLFWvidmode'width       gvm
-    , videoModeHeight      = fromIntegral $ c'GLFWvidmode'height      gvm
-    , videoModeRedBits     = fromIntegral $ c'GLFWvidmode'redBits     gvm
-    , videoModeGreenBits   = fromIntegral $ c'GLFWvidmode'greenBits   gvm
-    , videoModeBlueBits    = fromIntegral $ c'GLFWvidmode'blueBits    gvm
-    , videoModeRefreshRate = fromIntegral $ c'GLFWvidmode'refreshRate gvm
-    }
+  fromC gvm =
+    VideoMode
+      { videoModeWidth = fromIntegral $ c'GLFWvidmode'width gvm,
+        videoModeHeight = fromIntegral $ c'GLFWvidmode'height gvm,
+        videoModeRedBits = fromIntegral $ c'GLFWvidmode'redBits gvm,
+        videoModeGreenBits = fromIntegral $ c'GLFWvidmode'greenBits gvm,
+        videoModeBlueBits = fromIntegral $ c'GLFWvidmode'blueBits gvm,
+        videoModeRefreshRate = fromIntegral $ c'GLFWvidmode'refreshRate gvm
+      }
   toC = undefined
 
 instance C CInt StandardCursorShape where
   fromC v
-    | v == c'GLFW_ARROW_CURSOR     = StandardCursorShape'Arrow
-    | v == c'GLFW_IBEAM_CURSOR     = StandardCursorShape'IBeam
+    | v == c'GLFW_ARROW_CURSOR = StandardCursorShape'Arrow
+    | v == c'GLFW_IBEAM_CURSOR = StandardCursorShape'IBeam
     | v == c'GLFW_CROSSHAIR_CURSOR = StandardCursorShape'Crosshair
-    | v == c'GLFW_HAND_CURSOR      = StandardCursorShape'Hand
-    | v == c'GLFW_HRESIZE_CURSOR   = StandardCursorShape'HResize
-    | v == c'GLFW_VRESIZE_CURSOR   = StandardCursorShape'VResize
+    | v == c'GLFW_HAND_CURSOR = StandardCursorShape'Hand
+    | v == c'GLFW_HRESIZE_CURSOR = StandardCursorShape'HResize
+    | v == c'GLFW_VRESIZE_CURSOR = StandardCursorShape'VResize
     | otherwise = error $ "C CInt StandardCursorShape fromC: " ++ show v
-  toC  StandardCursorShape'Arrow     = c'GLFW_ARROW_CURSOR
-  toC  StandardCursorShape'IBeam     = c'GLFW_IBEAM_CURSOR
-  toC  StandardCursorShape'Crosshair = c'GLFW_CROSSHAIR_CURSOR
-  toC  StandardCursorShape'Hand      = c'GLFW_HAND_CURSOR
-  toC  StandardCursorShape'HResize   = c'GLFW_HRESIZE_CURSOR
-  toC  StandardCursorShape'VResize   = c'GLFW_VRESIZE_CURSOR
+  toC StandardCursorShape'Arrow = c'GLFW_ARROW_CURSOR
+  toC StandardCursorShape'IBeam = c'GLFW_IBEAM_CURSOR
+  toC StandardCursorShape'Crosshair = c'GLFW_CROSSHAIR_CURSOR
+  toC StandardCursorShape'Hand = c'GLFW_HAND_CURSOR
+  toC StandardCursorShape'HResize = c'GLFW_HRESIZE_CURSOR
+  toC StandardCursorShape'VResize = c'GLFW_VRESIZE_CURSOR
 
 --------------------------------------------------------------------------------
 
@@ -673,6 +677,7 @@ instance C CInt WindowAttrib where
     | v == c'GLFW_AUTO_ICONIFY = WindowAttrib'AutoIconify
     | v == c'GLFW_FOCUS_ON_SHOW = WindowAttrib'FocusOnShow
     | v == c'GLFW_HOVERED = WindowAttrib'Hovered
+    | v == c'GLFW_MOUSE_PASSTHROUGH = WindowAttrib'MousePassthrough
     | otherwise = error $ "C CInt WindowAttrib fromC: " ++ show v
   toC WindowAttrib'Decorated = c'GLFW_DECORATED
   toC WindowAttrib'Resizable = c'GLFW_RESIZABLE
@@ -680,6 +685,7 @@ instance C CInt WindowAttrib where
   toC WindowAttrib'AutoIconify = c'GLFW_AUTO_ICONIFY
   toC WindowAttrib'FocusOnShow = c'GLFW_FOCUS_ON_SHOW
   toC WindowAttrib'Hovered = c'GLFW_HOVERED
+  toC WindowAttrib'MousePassthrough = c'GLFW_MOUSE_PASSTHROUGH
 
 --------------------------------------------------------------------------------
 
