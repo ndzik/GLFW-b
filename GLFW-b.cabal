@@ -1,5 +1,5 @@
 name:         GLFW-b
-version:      3.3.0.0
+version:      3.3.9.1
 category:     Graphics
 
 author:       Brian Lewis <brian@lorf.org>
@@ -18,7 +18,7 @@ description:
   .
   GLFW-b depends on bindings-GLFW
   (<http://hackage.haskell.org/package/bindings-GLFW>), which, as of the time
-  of this writing, binds to GLFW 3.3.0, released 2019-04-15
+  of this writing, binds to GLFW 3.3.9, released 2023-12-13
   (<http://www.glfw.org/Version-3.3.0-released.html>
   <http://www.glfw.org/changelog.html>).
   .
@@ -47,16 +47,16 @@ library
 
   exposed-modules:
     Graphics.UI.GLFW
+    Graphics.UI.GLFW.C
 
   other-modules:
-    Graphics.UI.GLFW.C
     Graphics.UI.GLFW.Types
 
   build-depends:
       base          <  5
     , deepseq       >= 1.1.0.0
     , array         >= 0.5.3.0
-    , bindings-GLFW >= 3.3.0.0
+    , bindings-GLFW >= 3.3.9.2
 
 --------------------------------------------------------------------------------
 
@@ -75,7 +75,6 @@ test-suite main
 
   other-modules:
     Graphics.UI.GLFW
-    Graphics.UI.GLFW.C
     Graphics.UI.GLFW.Types
 
   build-depends:
@@ -83,7 +82,7 @@ test-suite main
     , HUnit                >= 1.3 && < 1.7
     , base                 <  5
     , array                >= 0.5.3.0
-    , bindings-GLFW        >= 3.3.0.0
+    , bindings-GLFW        >= 3.3.9.2
     , deepseq              >= 1.1.0.0
     , test-framework       == 0.8.*
     , test-framework-hunit == 0.3.*
